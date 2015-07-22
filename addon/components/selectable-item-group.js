@@ -25,7 +25,7 @@ export default Ember.Component.extend(ParentComponentSupport, {
 
   isValueSelected(value) {
     if (this.get('multiple')) {
-      return this.get('selection').indexOf(value) >= 0;
+      return this.get('selection') && (this.get('selection').indexOf(value) >= 0);
     }
     else {
       return this.get('selection') === value;
@@ -43,6 +43,9 @@ export default Ember.Component.extend(ParentComponentSupport, {
 
   addToSelection(value) {
     if (this.get('multiple')) {
+      if (!Ember.isArray(this.get('selection'))) {
+        this.set('selection', []);
+      }
       this.get('selection').addObject(value);
     }
     else {

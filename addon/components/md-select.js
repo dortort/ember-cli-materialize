@@ -8,14 +8,12 @@ export default MaterializeInputField.extend({
   optionLabelPath: 'content',
   optionValuePath: 'content',
 
-  didInsertElement() {
-    this._super(...arguments);
-    this._setupSelect();
-  },
-
-  _setupSelect() {
-    this.$('select').material_select();
-  },
+  setupSelect: Ember.on('didInsertElement', Ember.observer('content.[]', function() {
+    Ember.run.scheduleOnce('afterRender', () => {
+      // init or update select
+      this.$('select').material_select();
+    });
+  })),
 
   //TODO: clean up any listeners that $.select() puts in place
   // _teardownSelect() {
