@@ -1,11 +1,6 @@
 import SelectableItemGroup from './selectable-item-group';
-import CheckboxComponent from './md-check';
-import GroupSelectableItemMixin from '../mixins/group-selectable-item';
-
-
-var GroupCheckboxComponent = CheckboxComponent.extend(GroupSelectableItemMixin, { });
 
 export default SelectableItemGroup.extend({
-  selectableItemView: GroupCheckboxComponent,
+  selectableItemView: 'md-checks-check',
   multiple: true
 });

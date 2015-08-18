@@ -1,55 +1,77 @@
 import Ember from 'ember';
-
+import hbs from 'htmlbars-inline-precompile';
 import {
   moduleForComponent,
   test
-} from 'ember-qunit';
-
-
-import {
-  disabledGroupTest,
-  groupItemsRenderTest,
-  initialSelectionTest
-} from '../../helpers/selectable-item';
-
-
-import {
-  deselectForSingleSelectionTest,
-} from '../../helpers/selectable-item-group';
-
+}
+from 'ember-qunit';
 
 moduleForComponent('md-radios', {
-  unit: true,
-  // Specify the other units that are required for this test
-  needs: ['component:md-radio', 'component:radio-button']
+  integration: true
 });
 
-test('it renders', function(assert) {
-  assert.expect(2);
+test('no parameters, no block', function(assert) {
+  assert.expect(1);
 
-  // Creates the component instance
-  var component = this.subject();
-  assert.equal(component._state, 'preRender');
+  this.render(hbs `
+    {{md-radios}}
+  `);
 
-  // Renders the component to the page
-  this.render();
-  assert.equal(component._state, 'inDOM');
+  assert.equal(this.$('.md-radios').toArray().length, 1, 'component renders');
 });
 
-test('simple array test', function (assert) {
-  var component = this.subject({
+test('simple array test, with initial selection', function(assert) {
+  this.setProperties({
     content: Ember.A(['Dexter Morgan', 'Deborah Morgan', 'Harry Morgan']),
     selection: 'Harry Morgan'
   });
-  this.render();
+  this.render(hbs `
+    {{md-radios content=content selection=selection}}
+  `);
 
   assert.deepEqual(this.$('label').toArray().map(x => Ember.$(x).text().trim()), ['Dexter Morgan', 'Deborah Morgan', 'Harry Morgan'], 'Choices are valid');
   assert.equal(this.$('input[type="radio"]')[2].checked, true, 'Third radio is checked');
 });
 
+test('disabled test', function(assert) {
+  this.setProperties({
+    content: Ember.A(['Dexter Morgan', 'Deborah Morgan', 'Harry Morgan']),
+    selection: 'Harry Morgan'
+  });
+  this.render(hbs `
+    {{md-radios content=content selection=selection disabled=true}}
+  `);
+  assert.equal(this.$('input:disabled').length, 3, 'All three inputs disabled');
+});
 
-disabledGroupTest();
-groupItemsRenderTest();
-initialSelectionTest('bbb');
+test('deselecting checkbox works with multiple=false', function(assert) {
 
-deselectForSingleSelectionTest();
+  this.setProperties({
+    content: ['a', 'b', 'c'],
+    selection: 'b'
+  });
+
+  this.render(hbs `
+    {{md-radios content=content selection=selection}}
+  `);
+
+  assert.equal(this.$('input:checked').length, 1, 'One item should be selected');
+  assert.equal(this.$('input:checked').attr('value'), 'b', 'Item b should be selected');
+
+  this.$('input[value="a"]').click();
+  assert.equal(this.$('input:checked').length, 1, 'One item should be selected');
+  assert.equal(this.$('input:checked').attr('value'), 'a', 'Item a should be selected');
+
+  this.$('input[value="b"]').click();
+  assert.equal(this.$('input:checked').length, 1, 'One item should be selected');
+  assert.equal(this.$('input:checked').attr('value'), 'b', 'Item b should be selected');
+
+  this.$('input[value="b"]').click();
+  assert.equal(this.$('input:checked').length, 1, 'One item should be selected');
+  assert.equal(this.$('input:checked').attr('value'), 'b', 'Item b should be selected');
+
+  this.$('input[value="c"]').click();
+  assert.equal(this.$('input:checked').length, 1, 'One item should be selected');
+  assert.equal(this.$('input:checked').attr('value'), 'c', 'Item c should be selected');
+
+});
