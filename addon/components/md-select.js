@@ -10,6 +10,10 @@ export default MaterializeInputField.extend({
 
   setupSelect: Ember.on('didInsertElement', function() {
     Ember.run.scheduleOnce('afterRender', () => {
+      // HACK for when no option pre-selected
+      if (0 === this.$('select option:selected').length) {
+        this.$('select option:first').attr('selected', true);
+      }
       // init select
       this.$('select').material_select();
     });
