@@ -1,5 +1,6 @@
 # ember-cli-materialize
 
+[![Stories in Ready](https://badge.waffle.io/mike-north/ember-cli-materialize.png?label=ready&title=Ready)](https://waffle.io/mike-north/ember-cli-materialize)
 [![Build Status](https://travis-ci.org/mike-north/ember-cli-materialize.svg?branch=master)](https://travis-ci.org/mike-north/ember-cli-materialize)
 [![npm version](https://badge.fury.io/js/ember-cli-materialize.svg)](http://badge.fury.io/js/ember-cli-materialize)
 [![Code Climate](https://codeclimate.com/github/mike-north/ember-cli-materialize/badges/gpa.svg)](https://codeclimate.com/github/mike-north/ember-cli-materialize)
@@ -22,7 +23,8 @@ Ember.js version | ember-cli-materialize version
 -----------------|--------------
 `< 1.10.0`       | Not supported
 `1.10.0 <= x <  1.11.0`| [`v0.16.4`](https://github.com/mike-north/ember-cli-materialize/tree/v0.16.4)
-`x >= 1.11.0` | [![npm version](https://badge.fury.io/js/ember-cli-materialize.svg)](http://badge.fury.io/js/ember-cli-materialize)
+`1.11.0 <= x <  1.13.0`| [`v0.18.6`](https://github.com/mike-north/ember-cli-materialize/tree/v0.18.6)
+`x >= 1.13.0` | [![npm version](https://badge.fury.io/js/ember-cli-materialize.svg)](http://badge.fury.io/js/ember-cli-materialize)
 
 
 ## Main features
@@ -53,11 +55,11 @@ Using **SASS** makes configuring the color scheme simple. Just make sure you imp
 ```scss
 // Example app.scss
 @import 'components/color';
-@import 'components/variables';
 
 // Custom color settings go here
 $primary-color: color("pink", "lighten-2");
 
+@import 'components/variables';
 @import 'materialize';
 @import 'ember-cli-materialize';
 ```
@@ -90,6 +92,12 @@ module.exports = function(/* environment, appConfig */) {
 ```sh
 $ ember install ember-cli-materialize
 ```
+
+### PhantomJS
+
+If you are using PhantomJS version 1.9.x as a test runner then after installing this addon you may experience test failures when running tests via `ember test` that you do not see in a browser.
+
+This is due to the known limitation in PhantomJS 1.9 not providing a `.bind` method. To continue using PhantomJS simply either install [ember-cli-es5-shim](https://github.com/pixelhandler/ember-cli-es5-shim), which provides a `.bind` method, or try PhantomJS 2.x.
 
 ## Testing
 
