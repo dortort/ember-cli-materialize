@@ -1,12 +1,11 @@
 import Ember from 'ember';
 import ParentComponentSupport from 'ember-composability/mixins/parent-component-support';
 import layout from '../templates/components/selectable-item-group';
-import computed from 'ember-new-computed';
 
-var get = Ember.get;
+const { get, Component, A, computed } = Ember;
 
-export default Ember.Component.extend(ParentComponentSupport, {
-  layout: layout,
+export default Component.extend(ParentComponentSupport, {
+  layout,
 
   content: null,
   selection: null,
@@ -19,15 +18,14 @@ export default Ember.Component.extend(ParentComponentSupport, {
   init() {
     this._super(...arguments);
     if (this.get('selection') === null && !!this.get('multiple')) {
-      this.set('selection', Ember.A());
+      this.set('selection', new A([]));
     }
   },
 
   isValueSelected(value) {
     if (this.get('multiple')) {
-      return this.get('selection') && (this.get('selection').indexOf(value) >= 0);
-    }
-    else {
+      return this.get('selection').indexOf(value) >= 0;
+    } else {
       return this.get('selection') === value;
     }
   },
@@ -35,20 +33,15 @@ export default Ember.Component.extend(ParentComponentSupport, {
   setValueSelection(value, select) {
     if (select) {
       return this.addToSelection(value);
-    }
-    else {
+    } else {
       return this.removeFromSelection(value);
     }
   },
 
   addToSelection(value) {
     if (this.get('multiple')) {
-      if (!Ember.isArray(this.get('selection'))) {
-        this.set('selection', []);
-      }
       this.get('selection').addObject(value);
-    }
-    else {
+    } else {
       this.set('selection', value);
     }
   },
@@ -56,8 +49,7 @@ export default Ember.Component.extend(ParentComponentSupport, {
   removeFromSelection(value) {
     if (this.get('multiple')) {
       this.get('selection').removeObject(value);
-    }
-    else {
+    } else {
       if (this.get('selection') === value) {
         this.set('selection', null);
       }
@@ -65,39 +57,33 @@ export default Ember.Component.extend(ParentComponentSupport, {
   },
   disabled: false,
 
-  _valuePath: computed('optionValuePath',  {
-    get() {
-      var optionValuePath = get(this, 'optionValuePath');
-      return optionValuePath.replace(/^content\.?/, '');
-    }
+  _valuePath: computed('optionValuePath', function() {
+    const optionValuePath = get(this, 'optionValuePath');
+    return optionValuePath.replace(/^content\.?/, '');
   }),
 
-  _labelPath: computed('optionLabelPath',  {
-    get() {
-      var optionLabelPath = get(this, 'optionLabelPath');
-      return optionLabelPath.replace(/^content\.?/, '');
-    }
+  _labelPath: computed('optionLabelPath', function() {
+    const optionLabelPath = get(this, 'optionLabelPath');
+    return optionLabelPath.replace(/^content\.?/, '');
   }),
 
-  _content: computed('content.[]', '_valuePath', '_labelPath', {
-    get() {
-      var valuePath = get(this, '_valuePath');
-      var labelPath = get(this, '_labelPath');
-      var content = get(this, 'content') || Ember.A([]);
+  _content: computed('content.[]', '_valuePath', '_labelPath', function() {
+    const valuePath = get(this, '_valuePath');
+    const labelPath = get(this, '_labelPath');
+    const content = get(this, 'content') || new A([]);
 
-      if (valuePath && labelPath) {
-        return Ember.A(
-          content.map(el => {
-            return {value: get(el, valuePath), label: get(el, labelPath)};
-          })
-        );
-      } else {
-        return Ember.A(
-          content.map(el => {
-            return {value: el, label: el};
-          })
-        );
-      }
+    if (valuePath && labelPath) {
+      return A(
+        content.map(el => {
+          return { value: get(el, valuePath), label: get(el, labelPath) };
+        })
+      );
+    } else {
+      return A(
+        content.map(el => {
+          return { value: el, label: el };
+        })
+      );
     }
   })
 });

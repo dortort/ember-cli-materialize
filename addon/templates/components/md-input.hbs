@@ -1,5 +1,5 @@
 {{#if icon}}
-    <i class="material-icons prefix">{{icon}}</i>
+  {{bw-compat-icon icon extraClasses="prefix"}}
 {{/if}}
 {{input id=id
   value=value
@@ -12,6 +12,7 @@
   disabled=disabled
   autocomplete=autocomplete
   autofocus=autofocus
+  focusIn=(action 'inputFocusIn')
   step=step
   min=min
   max=max}}
