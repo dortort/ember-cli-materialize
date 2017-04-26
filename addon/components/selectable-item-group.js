@@ -24,7 +24,8 @@ export default Component.extend(ParentComponentSupport, {
 
   isValueSelected(value) {
     if (this.get('multiple')) {
-      return this.get('selection').indexOf(value) >= 0;
+      let selection = this.get('selection') || [];
+      return selection.indexOf(value) >= 0;
     } else {
       return this.get('selection') === value;
     }
